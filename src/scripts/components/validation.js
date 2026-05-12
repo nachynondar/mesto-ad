@@ -89,7 +89,11 @@ export const clearValidation = (formElement, settings) => {
 
   inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, settings);
+    inputElement.setCustomValidity("");
   });
 
-  disableSubmitButton(buttonElement, settings);
+  if (buttonElement) {
+    buttonElement.classList.add(settings.inactiveButtonClass);
+    buttonElement.disabled = true;
+  }
 };
