@@ -6,25 +6,20 @@ export const deleteCard = (cardElement) => {
   cardElement.remove();
 };
 
-const getTemplate = () => {
-  return document
-    .getElementById("card-template")
-    .content.querySelector(".card")
-    .cloneNode(true);
-};
-
-export const createCardElement = (
-  data,
-  { onPreviewPicture, onLikeIcon, onDeleteCard }
+export const createCard = (
+  cardData,
+  { onPreviewPicture, onLikeIcon, onDeleteCard },
+  cardTemplate
 ) => {
-  const cardElement = getTemplate();
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const likeButton = cardElement.querySelector(".card__like-button");
   const deleteButton = cardElement.querySelector(".card__control-button_type_delete");
   const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
 
-  cardImage.src = data.link;
-  cardImage.alt = data.name;
-  cardElement.querySelector(".card__title").textContent = data.name;
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
+  cardTitle.textContent = cardData.name;
 
   if (onLikeIcon) {
     likeButton.addEventListener("click", () => onLikeIcon(likeButton));
@@ -35,7 +30,7 @@ export const createCardElement = (
   }
 
   if (onPreviewPicture) {
-    cardImage.addEventListener("click", () => onPreviewPicture({name: data.name, link: data.link}));
+    cardImage.addEventListener("click", () => onPreviewPicture(cardData));
   }
 
   return cardElement;
