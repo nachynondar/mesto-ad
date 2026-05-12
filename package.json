@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,9 @@
   "bugs": {
     "url": "https://github.com/nachynondar/mesto-ad/issues"
   },
-  "homepage": "https://github.com/nachynondar/mesto-ad#readme",
+  "homepage": "https://nachynondar.github.io/mesto-ad/",
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "vite": "^8.0.12"
   }
 }

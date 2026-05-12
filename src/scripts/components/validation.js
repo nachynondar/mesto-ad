@@ -35,27 +35,43 @@ const hasInvalidInput = (inputElements) => {
   return inputElements.some((inputElement) => !inputElement.validity.valid);
 };
 
-const toggleButtonState = (inputElements, buttonElement, settings) => {
+const disableSubmitButton = (buttonElement, settings) => {
+  buttonElement.classList.add(settings.inactiveButtonClass);
+  buttonElement.disabled = true;
+};
+
+const enableSubmitButton = (buttonElement, settings) => {
+  buttonElement.classList.remove(settings.inactiveButtonClass);
+  buttonElement.disabled = false;
+};
+
+const toggleButtonState = (formElement, inputElements, buttonElement, settings) => {
   if (hasInvalidInput(inputElements)) {
-    buttonElement.classList.add(settings.inactiveButtonClass);
-    buttonElement.disabled = true;
+    disableSubmitButton(buttonElement, settings);
     return;
   }
 
-  buttonElement.classList.remove(settings.inactiveButtonClass);
-  buttonElement.disabled = false;
+  if (
+    typeof settings.isFormSubmitAllowed === "function" &&
+    !settings.isFormSubmitAllowed(formElement, inputElements)
+  ) {
+    disableSubmitButton(buttonElement, settings);
+    return;
+  }
+
+  enableSubmitButton(buttonElement, settings);
 };
 
 const setEventListeners = (formElement, settings) => {
   const inputElements = Array.from(formElement.querySelectorAll(settings.inputSelector));
   const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-  toggleButtonState(inputElements, buttonElement, settings);
+  toggleButtonState(formElement, inputElements, buttonElement, settings);
 
   inputElements.forEach((inputElement) => {
     inputElement.addEventListener("input", () => {
       checkInputValidity(formElement, inputElement, settings);
-      toggleButtonState(inputElements, buttonElement, settings);
+      toggleButtonState(formElement, inputElements, buttonElement, settings);
     });
   });
 };
@@ -75,5 +91,5 @@ export const clearValidation = (formElement, settings) => {
     hideInputError(formElement, inputElement, settings);
     inputElement.setCustomValidity("");
   });
-  toggleButtonState(inputElements, buttonElement, settings);
+  toggleButtonState(formElement, inputElements, buttonElement, settings);
 };
