@@ -7,10 +7,25 @@ const config = {
 };
 
 export const getResponseData = (res) => {
-  if (res.ok) {
-    return res.json();
-  }
-  return Promise.reject(`Ошибка: ${res.status}`);
+  return res
+    .json()
+    .then((data) => {
+      if (res.ok) {
+        return data;
+      }
+      return Promise.reject(
+        `Ошибка ${res.status}: ${data.message || JSON.stringify(data)}`
+      );
+    })
+    .catch((error) => {
+      if (error instanceof SyntaxError) {
+        if (res.ok) {
+          return {};
+        }
+        return Promise.reject(`Ошибка ${res.status}`);
+      }
+      return Promise.reject(error);
+    });
 };
 
 const request = (endpoint, options = {}) => {
@@ -50,15 +65,15 @@ export const deleteCardApi = (cardId) => {
 };
 
 export const putLike = (cardId) => {
-  return request(`/cards/likes/${cardId}`, { method: "PUT" });
+  return request(`/cards/${cardId}/likes`, { method: "PUT" });
 };
 
 export const deleteLike = (cardId) => {
-  return request(`/cards/likes/${cardId}`, { method: "DELETE" });
+  return request(`/cards/${cardId}/likes`, { method: "DELETE" });
 };
 
 export const patchAvatar = ({ avatar }) => {
-  return request("/users/me/avatar", {
+  return request("/users/me", {
     method: "PATCH",
     body: JSON.stringify({ avatar }),
   });
