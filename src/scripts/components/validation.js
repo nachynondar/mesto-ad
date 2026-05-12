@@ -84,12 +84,12 @@ export const enableValidation = (settings) => {
 };
 
 export const clearValidation = (formElement, settings) => {
-  const inputElements = Array.from(formElement.querySelectorAll(settings.inputSelector));
+  const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
   const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-  inputElements.forEach((inputElement) => {
+  inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, settings);
-    inputElement.setCustomValidity("");
   });
-  toggleButtonState(formElement, inputElements, buttonElement, settings);
+
+  disableSubmitButton(buttonElement, settings);
 };
