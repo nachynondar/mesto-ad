@@ -1,1 +1,1 @@
-https://github.com/nachynondar/mesto-production
+https://nachynondar.github.io/mesto-production/
