@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Public Pages Repository
 
 on:
   push:
@@ -9,18 +9,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ">=22.12"
-          cache: npm
+            node-version: '>=22.12'
+            cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build project
         run: npm run build
@@ -28,5 +29,10 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PUBLIC_PAGES_TOKEN }}
+          external_repository: nachynondar/mesto-production
           publish_dir: ./dist
+          publish_branch: main
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: final build fix'
